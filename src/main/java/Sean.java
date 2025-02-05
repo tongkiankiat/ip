@@ -1,31 +1,7 @@
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class Sean {
-    // Create class Task to store a task
-    public static class Task {
-        protected String description;
-        protected boolean isDone;
-
-        // Constructor
-        public Task(String description) {
-            this.description = description;
-            this.isDone = false;
-        }
-
-        // Methods
-        public String getStatusIcon() {
-            return (isDone ? "X" : " ");
-        }
-
-        public void markAsDone() {
-            this.isDone = true;
-        }
-
-        public void markAsUndone() {
-            this.isDone = false;
-        }
-    }
-
     public static void main(String[] args) {
         String input;
         Scanner in = new Scanner(System.in);
@@ -35,7 +11,6 @@ public class Sean {
         System.out.println("Hello! I'm Sean");
         System.out.println("What can I do for you?");
 
-        // Echoes user input
         while (true) {
             input = in.nextLine();
             // End conversation when user says bye
@@ -49,7 +24,7 @@ public class Sean {
             if (input.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCounter; i++) {
-                    System.out.println(i + 1 + ".[" + taskList[i].getStatusIcon() + "] " + taskList[i].description);
+                    System.out.println(i + 1 + "." + taskList[i].toString());
                 }
             }
             // Unmarking a task
@@ -64,8 +39,8 @@ public class Sean {
                     continue;
                 }
                 System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  [ ] " + taskList[taskIndex - 1].description);
                 taskList[taskIndex - 1].markAsUndone();
+                System.out.println("  " + taskList[taskIndex - 1].toString());
             }
             // Marking a task
             else if (input.startsWith("mark") && input.split(" ")[1].matches("\\d+")) {
@@ -79,14 +54,44 @@ public class Sean {
                     continue;
                 }
                 System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  [X] " + taskList[taskIndex - 1].description);
                 taskList[taskIndex - 1].markAsDone();
+                System.out.println("  " + taskList[taskIndex - 1].toString());
+
             }
-            // Else we store the task in the list
+            // Else we move on to todo, deadline, or task prompts
             else {
-                System.out.println("added: " + input);
-                taskList[taskCounter] = new Task(input);
-                taskCounter++;
+                if (input.startsWith("todo")) {
+                    String todoTask = input.split("todo")[1].strip();
+                    taskList[taskCounter] = new Todo(todoTask, todoTask);
+                    taskCounter++;
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  [T][ ] " + todoTask);
+                    System.out.println("Now you have " + taskCounter + (taskCounter == 1 ? " task " : " tasks ") + "in the list.");
+                }
+                else if (input.startsWith("deadline")) {
+                    String deadlineTask = input.split("deadline | /by")[1].strip();
+                    String deadlineBy = input.split("/by")[1].strip();
+                    taskList[taskCounter] = new Deadline(deadlineTask, deadlineBy);
+                    taskCounter++;
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  [D][ ] " + deadlineTask + " (by: " + deadlineBy + ")");
+                    System.out.println("Now you have " + taskCounter + (taskCounter == 1 ? " task " : " tasks ") + "in the list.");
+                }
+                else if (input.startsWith("event")) {
+                    String eventTask = input.split("event | /from | /to")[1].strip();
+                    String eventFrom = input.split("/from | /to")[1].strip();
+                    String eventTo = input.split("/to")[1].strip();
+                    taskList[taskCounter] = new Event(eventTask, eventFrom, eventTo);
+                    taskCounter++;
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  [E][ ] " + eventTask + " (from: " + eventFrom + " to: " + eventTo + ")");
+                    System.out.println("Now you have " + taskCounter + " tasks in the list.");
+                }
+                else {
+                    System.out.println("added: " + input);
+                    taskList[taskCounter] = new Task(input);
+                    taskCounter++;
+                }
             }
         }
     }
