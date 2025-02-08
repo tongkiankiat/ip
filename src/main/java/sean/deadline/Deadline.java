@@ -1,3 +1,7 @@
+package sean.deadline;
+
+import sean.task.Task;
+
 public class Deadline extends Task {
     // Attributes
     protected String by;

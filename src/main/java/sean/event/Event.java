@@ -1,3 +1,7 @@
+package sean.event;
+
+import sean.task.Task;
+
 public class Event extends Task {
     // Attributes
     protected String from;

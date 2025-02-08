@@ -1,3 +1,11 @@
+package sean;
+
+import sean.deadline.Deadline;
+import sean.event.Event;
+import sean.exceptions.SeanException;
+import sean.task.Task;
+import sean.todo.Todo;
+
 import java.util.Scanner;
 
 public class Sean {
@@ -65,7 +73,7 @@ public class Sean {
         try {
             int taskIndex = Integer.parseInt(input.split(" ")[1]);
 
-            if (taskList[taskIndex - 1].isDone == isDone) {
+            if (taskList[taskIndex - 1].getIsDone() == isDone) {
                 throw new SeanException((isDone ? "Task is already marked." : "Task is already unmarked"));
             }
 
@@ -139,7 +147,7 @@ public class Sean {
     // Check for duplicate task
     public static boolean noDuplicateTasks(String newTask) {
         for (int i = 0; i < taskCounter; i++) {
-            if (newTask.equalsIgnoreCase(taskList[i].description)) {
+            if (newTask.equalsIgnoreCase(taskList[i].getDescription())) {
                 return false;
             }
         }

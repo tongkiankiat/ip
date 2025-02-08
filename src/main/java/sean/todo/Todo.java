@@ -1,3 +1,7 @@
+package sean.todo;
+
+import sean.task.Task;
+
 public class Todo extends Task {
     // Attributes
     protected String task;

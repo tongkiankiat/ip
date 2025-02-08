@@ -1,3 +1,5 @@
+package sean.task;
+
 public class Task {
     // Attributes
     protected String description;
@@ -9,11 +11,20 @@ public class Task {
         this.isDone = false;
     }
 
-    // Methods
+    // Getters
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean getIsDone() {
+        return isDone;
+    }
+
     public String getStatusIcon() {
         return (isDone ? "X" : " ");
     }
 
+    // Methods
     public void markAsDone() {
         this.isDone = true;
     }
