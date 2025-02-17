@@ -7,12 +7,13 @@ import sean.task.Task;
 import sean.todo.Todo;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Sean {
     // Initialise Array to store Tasks
     public static int maxTaskCount = 100;
-    public static Task[] taskList = new Task[maxTaskCount];
-    public static int taskCounter = 0;
+    public static ArrayList<Task> taskList = new ArrayList<>();
+//    public static int taskCounter = 0;
 
     public static void main(String[] args) throws SeanException {
         String input;
@@ -63,8 +64,8 @@ public class Sean {
     // Display task list
     public static void displayTaskList() {
         System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < taskCounter; i++) {
-            System.out.println(i + 1 + "." + taskList[i].toString());
+        for (int i = 0; i < taskList.size(); i++) {
+            System.out.println(i + 1 + "." + taskList.get(i));
         }
     }
 
@@ -73,19 +74,19 @@ public class Sean {
         try {
             int taskIndex = Integer.parseInt(input.split(" ")[1]);
 
-            if (taskList[taskIndex - 1].getIsDone() == isDone) {
+            if (taskList.get(taskIndex - 1).getIsDone() == isDone) {
                 throw new SeanException((isDone ? "Task is already marked." : "Task is already unmarked"));
             }
 
             System.out.println(isDone ? "Nice! I've marked this task as done:" : "OK, I've marked this task as not done yet:");
 
             if (isDone) {
-                taskList[taskIndex - 1].markAsDone();
+                taskList.get(taskIndex - 1).markAsDone();
             } else {
-                taskList[taskIndex - 1].markAsUndone();
+                taskList.get(taskIndex - 1).markAsUndone();
             }
 
-            System.out.println("  " + taskList[taskIndex - 1].toString());
+            System.out.println("  " + taskList.get(taskIndex - 1));
         } catch (NumberFormatException e) {
             System.out.println("The task number is not valid! Are you sure you entered a number?");
         } catch (NullPointerException | IndexOutOfBoundsException e) {
@@ -98,8 +99,7 @@ public class Sean {
         try {
             String todoTask = input.split("todo")[1].strip();
             if (noDuplicateTasks(todoTask)) {
-                taskList[taskCounter] = new Todo(todoTask, todoTask);
-                taskCounter++;
+                taskList.add(new Todo(todoTask, todoTask));
                 printTaskAdded("  [T][ ] " + todoTask);
             } else {
                 printDuplicateTaskMessage();
@@ -115,8 +115,7 @@ public class Sean {
             String deadlineTask = input.split("deadline | /by")[1].strip();
             String deadlineBy = input.split("/by")[1].strip();
             if (noDuplicateTasks(deadlineTask)) {
-                taskList[taskCounter] = new Deadline(deadlineTask, deadlineBy);
-                taskCounter++;
+                taskList.add(new Deadline(deadlineTask, deadlineBy));
                 printTaskAdded("  [D][ ] " + deadlineTask + " (by: " + deadlineBy + ")");
             } else {
                 printDuplicateTaskMessage();
@@ -133,8 +132,7 @@ public class Sean {
             String eventFrom = input.split("/from | /to")[1].strip();
             String eventTo = input.split("/to")[1].strip();
             if (noDuplicateTasks(eventTask)) {
-                taskList[taskCounter] = new Event(eventTask, eventFrom, eventTo);
-                taskCounter++;
+                taskList.add(new Event(eventTask, eventFrom, eventTo));
                 printTaskAdded("  [E][ ] " + eventTask + " (from: " + eventFrom + " to: " + eventTo + ")");
             } else {
                 printDuplicateTaskMessage();
@@ -146,8 +144,8 @@ public class Sean {
 
     // Check for duplicate task
     public static boolean noDuplicateTasks(String newTask) {
-        for (int i = 0; i < taskCounter; i++) {
-            if (newTask.equalsIgnoreCase(taskList[i].getDescription())) {
+        for (int i = 0; i < taskList.size(); i++) {
+            if (newTask.equalsIgnoreCase(taskList.get(i).getDescription())) {
                 return false;
             }
         }
@@ -158,7 +156,7 @@ public class Sean {
     public static void printTaskAdded(String uniqueMessage) {
         System.out.println("Got it. I've added this task:");
         System.out.println(uniqueMessage);
-        System.out.println("Now you have " + taskCounter + (taskCounter == 1 ? " task " : " tasks ") + "in the list.");
+        System.out.println("Now you have " + taskList.size() + (taskList.size() == 1 ? " task " : " tasks ") + "in the list.");
     }
 
     // Print duplicate task message
