@@ -42,6 +42,10 @@ public class Sean {
             else if (input.startsWith("mark")) {
                 markTask(input, true);
             }
+            // Deleting a task
+            else if (input.startsWith("delete")) {
+                deleteTask(input);
+            }
             // Else we move on to todo, deadline, or task prompts
             else {
                 if (input.startsWith("todo")) {
@@ -90,7 +94,7 @@ public class Sean {
         } catch (NumberFormatException e) {
             System.out.println("The task number is not valid! Are you sure you entered a number?");
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            System.out.println("Invalid task number! Please input a test number from 1 to " + maxTaskCount);
+            System.out.println("Invalid task number! Please input a task number from 1 to " + maxTaskCount);
         }
     }
 
@@ -142,6 +146,20 @@ public class Sean {
         }
     }
 
+    // Deleting a task
+    public static void deleteTask(String input) {
+        try {
+            int taskIndex = Integer.parseInt(input.split(" ")[1]);
+            String taskDescription = taskList.get(taskIndex - 1).toString();
+            taskList.remove(taskIndex - 1);
+            printTaskDeleted(taskDescription);
+        } catch (NumberFormatException e) {
+            System.out.println("The task number is not valid! Are you sure you entered a number?");
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            System.out.println("Invalid task number! Please input a task number from 1 to " + maxTaskCount);
+        }
+    }
+
     // Check for duplicate task
     public static boolean noDuplicateTasks(String newTask) {
         for (int i = 0; i < taskList.size(); i++) {
@@ -156,6 +174,13 @@ public class Sean {
     public static void printTaskAdded(String uniqueMessage) {
         System.out.println("Got it. I've added this task:");
         System.out.println(uniqueMessage);
+        System.out.println("Now you have " + taskList.size() + (taskList.size() == 1 ? " task " : " tasks ") + "in the list.");
+    }
+
+    // Print task deleted
+    public static void printTaskDeleted(String uniqueMessage) {
+        System.out.println("Noted. I've removed this task.");
+        System.out.println("  " + uniqueMessage);
         System.out.println("Now you have " + taskList.size() + (taskList.size() == 1 ? " task " : " tasks ") + "in the list.");
     }
 
