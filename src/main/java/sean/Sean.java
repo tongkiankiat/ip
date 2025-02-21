@@ -6,18 +6,28 @@ import sean.exceptions.SeanException;
 import sean.task.Task;
 import sean.todo.Todo;
 
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Sean {
     // Initialise Array to store Tasks
-    public static int maxTaskCount = 100;
     public static ArrayList<Task> taskList = new ArrayList<>();
-//    public static int taskCounter = 0;
+
+    // Filepath of the file task list
+    // We store the task list file in: /data/taskList.txt
+    public static final String filePath = "../../../../data/taskList.txt";
 
     public static void main(String[] args) throws SeanException {
         String input;
         Scanner in = new Scanner(System.in);
+
+        // Load task list from taskList.txt
+        loadTaskList();
 
         System.out.println("Hello! I'm Sean");
         System.out.println("What can I do for you?");
@@ -47,19 +57,17 @@ public class Sean {
                 deleteTask(input);
             }
             // Else we move on to todo, deadline, or task prompts
+            else if (input.startsWith("todo")) {
+                addTodoTask(input);
+            }
+            else if (input.startsWith("deadline")) {
+                addDeadlineTask(input);
+            }
+            else if (input.startsWith("event")) {
+                addEventTask(input);
+            }
             else {
-                if (input.startsWith("todo")) {
-                    addTodoTask(input);
-                }
-                else if (input.startsWith("deadline")) {
-                    addDeadlineTask(input);
-                }
-                else if (input.startsWith("event")) {
-                    addEventTask(input);
-                }
-                else {
-                    System.out.println("Unknown command, did you mistype a command?");
-                }
+                System.out.println("Unknown command, did you mistype a command?");
             }
         }
         in.close();
@@ -67,34 +75,41 @@ public class Sean {
 
     // Display task list
     public static void displayTaskList() {
+        if (taskList.isEmpty()) {
+            System.out.println("You have no tasks!");
+            return;
+        }
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < taskList.size(); i++) {
-            System.out.println(i + 1 + "." + taskList.get(i));
+            System.out.println(i + 1 + "." + taskList.get(i).toString());
         }
     }
 
     // Marking/Unmarking Task
     public static void markTask(String input, boolean isDone) throws SeanException {
         try {
-            int taskIndex = Integer.parseInt(input.split(" ")[1]);
+            int taskIndex = Integer.parseInt(input.split(" ")[1]) - 1;
+            Task task = taskList.get(taskIndex);
 
-            if (taskList.get(taskIndex - 1).getIsDone() == isDone) {
+            if (task.getIsDone() == isDone) {
                 throw new SeanException((isDone ? "Task is already marked." : "Task is already unmarked"));
             }
 
-            System.out.println(isDone ? "Nice! I've marked this task as done:" : "OK, I've marked this task as not done yet:");
-
             if (isDone) {
-                taskList.get(taskIndex - 1).markAsDone();
+                task.markAsDone();
+                System.out.println("Nice! I've marked this task as done:");
             } else {
-                taskList.get(taskIndex - 1).markAsUndone();
+                task.markAsUndone();
+                System.out.println("OK, I've marked this task as not done yet:");
             }
+            // Update the task list file to reflect correct status
+            saveOrUpdateTaskList(task, taskIndex);
 
-            System.out.println("  " + taskList.get(taskIndex - 1));
+            System.out.println("  " + task.toString());
         } catch (NumberFormatException e) {
             System.out.println("The task number is not valid! Are you sure you entered a number?");
-        } catch (NullPointerException | IndexOutOfBoundsException e) {
-            System.out.println("Invalid task number! Please input a task number from 1 to " + maxTaskCount);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Invalid task number! Please input a test number from 1 to " + taskList.size());
         }
     }
 
@@ -103,8 +118,10 @@ public class Sean {
         try {
             String todoTask = input.split("todo")[1].strip();
             if (noDuplicateTasks(todoTask)) {
-                taskList.add(new Todo(todoTask, todoTask));
+                Task task = new Todo(todoTask, todoTask, false);
+                taskList.add(task);
                 printTaskAdded("  [T][ ] " + todoTask);
+                saveOrUpdateTaskList(task, null);
             } else {
                 printDuplicateTaskMessage();
             }
@@ -119,8 +136,10 @@ public class Sean {
             String deadlineTask = input.split("deadline | /by")[1].strip();
             String deadlineBy = input.split("/by")[1].strip();
             if (noDuplicateTasks(deadlineTask)) {
-                taskList.add(new Deadline(deadlineTask, deadlineBy));
+                Deadline deadline = new Deadline(deadlineTask, deadlineBy, false);
+                taskList.add(deadline);
                 printTaskAdded("  [D][ ] " + deadlineTask + " (by: " + deadlineBy + ")");
+                saveOrUpdateTaskList(deadline, null);
             } else {
                 printDuplicateTaskMessage();
             }
@@ -136,8 +155,10 @@ public class Sean {
             String eventFrom = input.split("/from | /to")[1].strip();
             String eventTo = input.split("/to")[1].strip();
             if (noDuplicateTasks(eventTask)) {
-                taskList.add(new Event(eventTask, eventFrom, eventTo));
+                Event event = new Event(eventTask, eventFrom, eventTo, false);
+                taskList.add(event);
                 printTaskAdded("  [E][ ] " + eventTask + " (from: " + eventFrom + " to: " + eventTo + ")");
+                saveOrUpdateTaskList(event, null);
             } else {
                 printDuplicateTaskMessage();
             }
@@ -156,14 +177,14 @@ public class Sean {
         } catch (NumberFormatException e) {
             System.out.println("The task number is not valid! Are you sure you entered a number?");
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            System.out.println("Invalid task number! Please input a task number from 1 to " + maxTaskCount);
+            System.out.println("Invalid task number! Please input a task number from 1 to " + taskList.size());
         }
     }
 
     // Check for duplicate task
     public static boolean noDuplicateTasks(String newTask) {
-        for (int i = 0; i < taskList.size(); i++) {
-            if (newTask.equalsIgnoreCase(taskList.get(i).getDescription())) {
+        for (Task task : taskList) {
+            if (newTask.equalsIgnoreCase(task.getDescription())) {
                 return false;
             }
         }
@@ -187,5 +208,90 @@ public class Sean {
     // Print duplicate task message
     public static void printDuplicateTaskMessage() {
         System.out.println("This task already exists!");
+    }
+
+    // Create the file to store tasks, if it does not exist yet
+    public static void createTaskListFile() {
+        try {
+            File file = new File(filePath);
+            File parentFolder = file.getParentFile();
+            // Check that /data folder exists
+            if (!parentFolder.exists()) {
+                parentFolder.mkdirs();
+            }
+            // Check that the taskList.txt file exists
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            System.out.println("There was an error creating the task list file.");
+        }
+    }
+
+    // Loads tasks in hard disk
+    public static void loadTaskList() {
+        // Clear taskList first
+        taskList.clear();
+        File file = new File(filePath);
+        try {
+            if (file.exists()) {
+                Scanner scanner = new Scanner(file);
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    String[] lineParts = line.split("\\|");
+                    parseTaskFromFile(lineParts);
+                }
+            } else {
+                createTaskListFile();
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+        }
+    }
+
+    // Parse text input from taskList.txt
+    public static void parseTaskFromFile(String[] lineParts) {
+        String taskType = lineParts[0].trim();
+        boolean isDone = lineParts[1].trim().equals("1");
+        String taskDescription = lineParts[2].trim();
+
+        if (taskType.equals("T")) { // Todo task
+            Todo todo = new Todo(taskDescription, taskDescription, isDone);
+            taskList.add(todo);
+        } else if (taskType.equals("D")) { // Deadline task
+            Deadline deadline = new Deadline(taskDescription, lineParts[3].trim(), isDone);
+            taskList.add(deadline);
+        } else { // Event task
+            Event event = new Event(taskDescription, lineParts[3].trim(), lineParts[3].split("-")[1].trim(), isDone);
+            taskList.add(event);
+        }
+    }
+
+    // Saves or updates task list
+    public static void saveOrUpdateTaskList(Task task, Integer taskIndex) {
+        try {
+            // We append a new task to the file when index is null, else we modify the status of the task
+            File file = new File(filePath);
+            File parentFolder = file.getParentFile();
+            // Check that parent folder exists
+            if (!parentFolder.exists()) {
+                parentFolder.mkdirs();
+            }
+
+            ArrayList<String> fileLines = new ArrayList<>(Files.readAllLines(file.toPath()));
+            String taskFileFormat = task.toFileFormat();
+
+            if (taskIndex == null) {
+                // Append new task
+                fileLines.add(taskFileFormat);
+            } else {
+                // Go to the line by using the index provided, and update its status
+                fileLines.set(taskIndex, taskFileFormat);
+            }
+            // Rewrite back to the file
+            Files.write(Path.of(filePath), fileLines);
+        } catch (IOException e) {
+            System.out.println("An error occurred saving or updating the task list file.");
+        }
     }
 }

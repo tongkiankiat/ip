@@ -5,17 +5,20 @@ import sean.task.Task;
 public class Todo extends Task {
     // Attributes
     protected String task;
-    protected boolean isDone;
 
     // Constructor
-    public Todo(String description, String task ) {
-        super(description);
+    public Todo(String description, String task, boolean isDone) {
+        super(description, isDone);
         this.task = task;
-        this.isDone = false;
     }
 
     @Override
     public String toString() {
         return "[T][" + super.getStatusIcon() + "] " + super.description;
+    }
+
+    @Override
+    public String toFileFormat() {
+        return "T | " + (super.isDone ? "1" : "0") + " | " + super.description;
     }
 }
