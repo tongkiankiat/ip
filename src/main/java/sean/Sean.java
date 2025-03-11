@@ -20,8 +20,8 @@ public class Sean {
 
     // Filepath of the file task list
     // We store the task list file in: /data/taskList.txt
-    private static final String home = System.getProperty("user.home");
-    public static final Path filePath = Paths.get(home, "..", "..", "..", "..", "data", "taskList.txt");
+    private static final String dir = System.getProperty("user.dir");
+    public static final Path filePath = Paths.get(dir, "data", "taskList.txt" );
 
     public static void main(String[] args) throws SeanException {
         String input;
@@ -175,9 +175,10 @@ public class Sean {
             String taskDescription = taskList.get(taskIndex - 1).toString();
             taskList.remove(taskIndex - 1);
             printTaskDeleted(taskDescription);
+            removeFromTaskList(taskIndex - 1);
         } catch (NumberFormatException e) {
             System.out.println("The task number is not valid! Are you sure you entered a number?");
-        } catch (NullPointerException | IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("Invalid task number! Please input a task number from 1 to " + taskList.size());
         }
     }
@@ -214,7 +215,7 @@ public class Sean {
     // Create the file to store tasks, if it does not exist yet
     public static void createTaskListFile() {
         try {
-            File file = new File(filePath);
+            File file = filePath.toFile();
             File parentFolder = file.getParentFile();
             // Check that /data folder exists
             if (!parentFolder.exists()) {
@@ -233,7 +234,7 @@ public class Sean {
     public static void loadTaskList() {
         // Clear taskList first
         taskList.clear();
-        File file = new File(filePath);
+        File file = filePath.toFile();
         try {
             if (file.exists()) {
                 Scanner scanner = new Scanner(file);
@@ -272,7 +273,7 @@ public class Sean {
     public static void saveOrUpdateTaskList(Task task, Integer taskIndex) {
         try {
             // We append a new task to the file when index is null, else we modify the status of the task
-            File file = new File(filePath);
+            File file = filePath.toFile();
             File parentFolder = file.getParentFile();
             // Check that parent folder exists
             if (!parentFolder.exists()) {
@@ -290,9 +291,26 @@ public class Sean {
                 fileLines.set(taskIndex, taskFileFormat);
             }
             // Rewrite back to the file
-            Files.write(Path.of(filePath), fileLines);
+            Files.write(filePath, fileLines);
         } catch (IOException e) {
             System.out.println("An error occurred saving or updating the task list file.");
+        }
+    }
+
+    // Delete task from task list
+    public static void removeFromTaskList(int taskIndex) {
+        try {
+            // Open the file and store all its lines in an ArrayList
+            File file = filePath.toFile();
+            ArrayList<String> fileLines = new ArrayList<>(Files.readAllLines(file.toPath()));
+
+            // Remove the task at the specified taskIndex
+            fileLines.remove(taskIndex);
+
+            // Rewrite back to file
+            Files.write(filePath, fileLines);
+        } catch (IOException e) {
+            System.out.println("An error occurred deleting the task from the task list file");
         }
     }
 }
