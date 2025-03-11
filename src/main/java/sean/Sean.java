@@ -8,10 +8,10 @@ import sean.todo.Todo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class Sean {
@@ -20,7 +20,8 @@ public class Sean {
 
     // Filepath of the file task list
     // We store the task list file in: /data/taskList.txt
-    public static final String filePath = "../../../../data/taskList.txt";
+    private static final String home = System.getProperty("user.home");
+    public static final Path filePath = Paths.get(home, "..", "..", "..", "..", "data", "taskList.txt");
 
     public static void main(String[] args) throws SeanException {
         String input;
