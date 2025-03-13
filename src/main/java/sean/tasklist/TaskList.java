@@ -31,4 +31,14 @@ public class TaskList {
     public void removeTask(int taskIndex) {
         taskList.remove(taskIndex);
     }
+
+    public TaskList findTask(String keyword) {
+        TaskList filteredTaskList = new TaskList();
+        for (Task task : taskList) {
+            if (task.toString().contains(keyword)) {
+                filteredTaskList.addTask(task);
+            }
+        }
+        return filteredTaskList;
+    }
 }

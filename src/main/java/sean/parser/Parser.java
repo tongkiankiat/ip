@@ -41,7 +41,7 @@ public class Parser {
             return new UnmarkTaskCommand(taskIndex, isDone);
         } else if (commandWord.equals("mark")) {
             int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
-            boolean isDone = false;
+            boolean isDone = true;
             return new MarkTaskCommand(taskIndex, isDone);
         } else if (commandWord.equals("delete")) {
             int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
@@ -58,6 +58,9 @@ public class Parser {
             String eventFrom = userCommand.split("/from | /to")[1].trim();
             String eventTo = userCommand.split("/to")[1].trim();
             return new EventCommand(eventTask, eventFrom, eventTo);
+        } else if (commandWord.equals("find")) {
+            String keyword = userCommand.split("find")[1].strip();
+            return new FindCommand(keyword);
         } else {
             return new UnknownCommand();
         }

@@ -24,8 +24,7 @@ public class UnmarkTaskCommand extends Command {
         String messageToReturn;
         try {
             Task task = taskList.getTaskList().get(taskIndex);
-
-            if (task.getIsDone() != isDone) {
+            if (task.getIsDone() == isDone) {
                 throw new SeanException(Messages.TASK_ALREADY_UNMARKED_MESSAGE);
             }
             task.markAsUndone();

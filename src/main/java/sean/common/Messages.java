@@ -18,6 +18,9 @@ public class Messages {
     public static final String ADD_EVENT_TASK_ERROR_MESSAGE = "Please add a description and a start and end date/time for the event task in the format: \"event {task} /from {date/time} /to {date/time}\"";
     public static final String TASK_ADDED_MESSAGE = "Got it. I've added this task.";
     public static final String TASK_DELETED_MESSAGE = "Noted. I've removed this task.";
+    public static final String TASKS_FOUND_MESSAGE = "Here are the matching tasks in your list:";
+    public static final String NO_TASKS_FOUND_MESSAGE = "There are no such tasks with keyword: ";
+    public static final String TASKS_FOUND_ERROR_MESSAGE = "Error finding files with keyword: ";
     public static final String TASK_DUPLICATE_MESSAGE = "This task already exists!";
     public static final String CREATE_TASK_LIST_FILE_ERROR_MESSAGE = "There was an error creating the task list file.";
     public static final String LOAD_TASK_LIST_FILE_ERROR_MESSAGE = "Error reading file.";
