@@ -1,6 +1,4 @@
-package sean.deadline;
-
-import sean.task.Task;
+package sean.task;
 
 public class Deadline extends Task {
     // Attributes

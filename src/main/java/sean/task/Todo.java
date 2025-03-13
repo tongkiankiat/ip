@@ -1,6 +1,4 @@
-package sean.todo;
-
-import sean.task.Task;
+package sean.task;
 
 public class Todo extends Task {
     // Attributes

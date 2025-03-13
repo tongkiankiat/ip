@@ -1,6 +1,4 @@
-package sean.event;
-
-import sean.task.Task;
+package sean.task;
 
 public class Event extends Task {
     // Attributes
