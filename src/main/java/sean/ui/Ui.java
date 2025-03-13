@@ -11,19 +11,30 @@ public class Ui {
     private final Scanner in;
     private final PrintWriter out;
 
-    // Constructor
+    /**
+     * Constructs a {@code Ui} object, initializing input and output streams.
+     */
     public Ui() {
         this.in = new Scanner(System.in);
         this.out = new PrintWriter(System.out, true);
     }
 
-    // Methods
+    /**
+     * Prints messages to the user.
+     *
+     * @param message The messages to be printed.
+     */
     public void printToUser(String... message) {
         for (String s : message) {
             out.println(s);
         }
     }
 
+    /**
+     * Prints the result of a command execution to the user.
+     *
+     * @param commandResult The result of the executed command.
+     */
     public void printResultToUser(CommandResult commandResult) {
         printToUser(commandResult.commandResultToUser);
         if (commandResult.taskList != null) {
@@ -42,6 +53,11 @@ public class Ui {
         printToUser(Messages.LOADING_ERROR_MESSAGE);
     }
 
+    /**
+     * Reads and returns the user's command input, ignoring empty inputs.
+     *
+     * @return The user's command as a {@code String}.
+     */
     public String readUserCommand() {
         String input = in.nextLine();
 

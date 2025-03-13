@@ -9,7 +9,12 @@ import sean.task.Todo;
 import java.util.ArrayList;
 
 public class Parser {
-    // Methods
+    /**
+     * Parses task data from a file and converts it into a list of {@code Task} objects.
+     *
+     * @param lineParts A list of string arrays, where each array represents a task's data read from a file.
+     * @return A list of {@code Task} objects reconstructed from the file data.
+     */
     public static ArrayList<Task> parseTaskFromFile(ArrayList<String[]> lineParts) {
         ArrayList<Task> taskList = new ArrayList<>();
         for (String[] line : lineParts) {
@@ -28,6 +33,12 @@ public class Parser {
         return taskList;
     }
 
+    /**
+     * Parses a user's command input and returns the corresponding {@code Command} object to be executed.
+     *
+     * @param userCommand The raw input string entered by the user.
+     * @return A {@code Command} object representing the parsed user command.
+     */
     public Command parseUserCommand(String userCommand) {
         String commandWord = userCommand.split(" ")[0].trim();
 

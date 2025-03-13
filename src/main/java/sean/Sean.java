@@ -13,7 +13,10 @@ public class Sean {
     private TaskList tasks;
     private Ui ui;
 
-    // Constructor
+    /**
+     * Constructs a {@code Sean} chatbot instance, initializing UI, storage, and task management.
+     * Loads tasks from storage if available; otherwise, initializes a new task list.
+     */
     public Sean() {
         ui = new Ui();
         storage = new Storage();
@@ -25,11 +28,21 @@ public class Sean {
         }
     }
 
-    // Methods
+    /**
+     * The main entry point for the Sean CLI application.
+     *
+     * @param args Command-line arguments (not used).
+     * @throws SeanException If an error occurs during execution.
+     */
     public static void main(String[] args) throws SeanException {
         new Sean().run();
     }
 
+    /**
+     * Runs the chatbot, processing user commands in a loop until the user exits.
+     *
+     * @throws SeanException If an error occurs during command execution.
+     */
     public void run() throws SeanException {
         ui.printWelcomeMessage();
         Command command;
@@ -41,6 +54,13 @@ public class Sean {
         } while (!ByeCommand.isBye(command));
     }
 
+    /**
+     * Executes a given command, updates the task list, and saves the updated task list to the user's device..
+     *
+     * @param command The command to be executed.
+     * @return The result of executing the command.
+     * @throws SeanException If an error occurs during command execution.
+     */
     public CommandResult execute(Command command) throws SeanException {
         command.setTaskList(tasks);
         CommandResult commandResult = command.executeCommand();
