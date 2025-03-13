@@ -72,6 +72,8 @@ public class Parser {
         } else if (commandWord.equals("find")) {
             String keyword = userCommand.split("find")[1].strip();
             return new FindCommand(keyword);
+        } else if (commandWord.equals("help")) {
+            return new HelpCommand();
         } else {
             return new UnknownCommand();
         }
