@@ -20,7 +20,12 @@ public class Storage {
     // Constructor
     public Storage() {}
 
-    // Methods
+    /**
+     * Loads tasks from the storage file and returns them as a list of parsed string arrays.
+     *
+     * @return A list of string arrays representing stored task data.
+     * @throws SeanException If there is an error loading the task list file.
+     */
     public ArrayList<String[]> load() throws SeanException {
         File file = STORAGE_FILEPATH.toFile();
         ArrayList<String[]> lineParts = new ArrayList<>();
@@ -40,7 +45,11 @@ public class Storage {
         return lineParts;
     }
 
-    // Create the file to store tasks, if it does not exist yet
+    /**
+     * Creates the task list file if it does not exist.
+     *
+     * @throws SeanException If there is an error creating the task list file.
+     */
     public void createTaskListFile() throws SeanException {
         try {
             File file = STORAGE_FILEPATH.toFile();
@@ -59,7 +68,12 @@ public class Storage {
         }
     }
 
-    // Saves task list
+    /**
+     * Saves the current task list to the storage file.
+     *
+     * @param taskList The {@code TaskList} containing tasks to be saved.
+     * @throws SeanException If there is an error saving the task list.
+     */
     public void saveTaskList(TaskList taskList) throws SeanException {
         try {
             File file = STORAGE_FILEPATH.toFile();

@@ -1,5 +1,10 @@
 package sean.common;
 
+/**
+ * Defines common messages used throughout the application.
+ * This class contains static final string constants that represent
+ * various user messages and error messages.
+ */
 public class Messages {
     public static final String WELCOME_MESSAGE = "Hello! I'm Sean\nWhat can i do for you?";
     public static final String GOODBYE_MESSAGE = "Bye. Hope to see you again soon!";
