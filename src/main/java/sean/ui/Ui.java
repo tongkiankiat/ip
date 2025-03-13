@@ -29,7 +29,7 @@ public class Ui {
         if (commandResult.taskList != null) {
             int taskListSize = commandResult.taskList.getTaskList().size();
             for (int i = 0; i < taskListSize; i++) {
-                printToUser(commandResult.taskList.getTaskList().get(i).toString());
+                printToUser(i + 1 + ". " + commandResult.taskList.getTaskList().get(i).toString());
             }
         }
     }

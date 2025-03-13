@@ -81,46 +81,4 @@ public class Storage {
             throw new SeanException(Messages.SAVE_OR_UPDATE_TASK_LIST_FILE_ERROR_MESSAGE);
         }
     }
-
-//    // Saves or updates task list
-//    public void saveOrUpdateTaskList(Task task, Integer taskIndex) throws SeanException {
-//        try {
-//            File file = STORAGE_FILEPATH.toFile();
-//            File parentFolder = file.getParentFile();
-//
-//            if (!parentFolder.exists()) {
-//                parentFolder.mkdirs();
-//            }
-//
-//            ArrayList<String> fileLines = new ArrayList<>(Files.readAllLines(file.toPath()));
-//            String taskFileFormat = task.toFileFormat();
-//
-//            if (taskIndex == null) {
-//                fileLines.add(taskIndex, taskFileFormat);
-//            } else {
-//                fileLines.set(taskIndex, taskFileFormat);
-//            }
-//
-//            // Rewrite back to the file
-//            Files.write(STORAGE_FILEPATH, fileLines);
-//        } catch (IOException e) {
-//            throw new SeanException(Messages.SAVE_OR_UPDATE_TASK_LIST_FILE_ERROR_MESSAGE);
-//        }
-//    }
-
-//    // Delete task from task list
-//    public void removeFromTaskList(int taskIndex) throws SeanException {
-//        try {
-//            File file = STORAGE_FILEPATH.toFile();
-//            ArrayList<String> fileLines = new ArrayList<>(Files.readAllLines(file.toPath()));
-//
-//            // Remove the task at the specified taskIndex
-//            fileLines.remove(taskIndex);
-//
-//            // Rewrite back to file
-//            Files.write(STORAGE_FILEPATH, fileLines);
-//        } catch (IOException e) {
-//            throw new SeanException(Messages.REMOVE_TASK_ERROR_MESSAGE);
-//        }
-//    }
 }
