@@ -6,29 +6,6 @@ Sean chatbot is a text-based Java Command Line Interface (CLI) application with 
 adding todo, deadline, and event tasks, along with the option to delete these tasks, mark these tasks as complete or incomplete
 as well as searching for tasks with a specific keyword. 
 
-## Adding deadlines
-
-// Describe the action and its outcome.
-
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
-```
-
-## Feature ABC
-
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
-
 ## Launching Sean
 
 ---
@@ -48,9 +25,7 @@ What can i do for you?
 5. Type the command in the command line and press Enter to execute it. e.g. typing **`help`** and pressing Enter will
 return the list of commands available.
 
-6. Refer to the [Commands](Commands) below for details of each command
-
----
+6. Refer to the [Commands](Commands) below for details of each command.
 
 ## Commands
 
