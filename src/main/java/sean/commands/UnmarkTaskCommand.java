@@ -25,14 +25,14 @@ public class UnmarkTaskCommand extends Command {
         try {
             Task task = taskList.getTaskList().get(taskIndex);
             if (task.getIsDone() == isDone) {
-                throw new SeanException(Messages.TASK_ALREADY_UNMARKED_MESSAGE);
+                return new CommandResult(Messages.TASK_ALREADY_UNMARKED_MESSAGE);
             }
             task.markAsUndone();
             messageToReturn = Messages.TASK_UNMARKED_MESSAGE + newLine + task.toString();
         } catch (NumberFormatException e) {
             messageToReturn = Messages.OUT_OF_RANGE_TASK_NUMBER_MESSAGE;
         } catch (IndexOutOfBoundsException e) {
-            messageToReturn = Messages.INVALID_TASK_NUMBER_MESSAGE;
+            messageToReturn = Messages.INVALID_TASK_NUMBER_MESSAGE + taskList.getTaskList().size();
         }
         return new CommandResult(messageToReturn);
     }
