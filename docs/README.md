@@ -25,7 +25,7 @@ What can i do for you?
 5. Type the command in the command line and press Enter to execute it. e.g. typing **`help`** and pressing Enter will
 return the list of commands available.
 
-6. Refer to the [Commands](Commands) below for details of each command.
+6. Refer to the [Commands](#commands) below for details of each command.
 
 ## Commands
 
