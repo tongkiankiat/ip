@@ -45,12 +45,16 @@ public class Sean {
      */
     public void run() throws SeanException {
         ui.printWelcomeMessage();
-        Command command;
+        Command command = null;
         do {
             String userCommand = ui.readUserCommand();
-            command = new Parser().parseUserCommand(userCommand);
-            CommandResult commandResult = execute(command);
-            ui.printResultToUser(commandResult);
+            try {
+                command = new Parser().parseUserCommand(userCommand);
+                CommandResult commandResult = execute(command);
+                ui.printResultToUser(commandResult);
+            } catch (SeanException e) {
+                ui.printToUser(e.getMessage());
+            }
         } while (!ByeCommand.isBye(command));
     }
 

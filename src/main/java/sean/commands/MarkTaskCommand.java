@@ -23,14 +23,14 @@ public class MarkTaskCommand extends Command {
         try {
             Task task = taskList.getTaskList().get(taskIndex);
             if (task.getIsDone() == isDone) {
-                throw new SeanException(Messages.TASK_ALREADY_MARKED_MESSAGE);
+                return new CommandResult(Messages.TASK_ALREADY_MARKED_MESSAGE);
             }
             task.markAsDone();
             messageToReturn = Messages.TASK_MARKED_MESSAGE + newLine + task.toString();
         } catch (NumberFormatException e) {
             messageToReturn = Messages.OUT_OF_RANGE_TASK_NUMBER_MESSAGE;
         } catch (IndexOutOfBoundsException e) {
-            messageToReturn = Messages.INVALID_TASK_NUMBER_MESSAGE;
+            messageToReturn = Messages.INVALID_TASK_NUMBER_MESSAGE + taskList.getTaskList().size();
         }
         return new CommandResult(messageToReturn);
     }

@@ -30,4 +30,5 @@ public class Messages {
     public static final String CREATE_TASK_LIST_FILE_ERROR_MESSAGE = "There was an error creating the task list file.";
     public static final String LOAD_TASK_LIST_FILE_ERROR_MESSAGE = "Error reading file.";
     public static final String SAVE_OR_UPDATE_TASK_LIST_FILE_ERROR_MESSAGE = "An error occurred saving the task list file.";
+    public static final String WRONG_TYPE = "Please enter an integer for the task index";
 }

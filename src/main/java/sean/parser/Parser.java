@@ -1,6 +1,8 @@
 package sean.parser;
 
 import sean.commands.*;
+import sean.common.Messages;
+import sean.exceptions.SeanException;
 import sean.task.Deadline;
 import sean.task.Event;
 import sean.task.Task;
@@ -39,7 +41,7 @@ public class Parser {
      * @param userCommand The raw input string entered by the user.
      * @return A {@code Command} object representing the parsed user command.
      */
-    public Command parseUserCommand(String userCommand) {
+    public Command parseUserCommand(String userCommand) throws SeanException {
         String commandWord = userCommand.split(" ")[0].trim();
 
         if (commandWord.equals("bye")) {
@@ -47,16 +49,28 @@ public class Parser {
         } else if (commandWord.equals("list")) {
             return new ListCommand();
         } else if (commandWord.equals("unmark")) {
-            int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
-            boolean isDone = false;
-            return new UnmarkTaskCommand(taskIndex, isDone);
+            try {
+                int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
+                boolean isDone = false;
+                return new UnmarkTaskCommand(taskIndex, isDone);
+            } catch (NumberFormatException e) {
+                throw new SeanException(Messages.WRONG_TYPE);
+            }
         } else if (commandWord.equals("mark")) {
-            int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
-            boolean isDone = true;
-            return new MarkTaskCommand(taskIndex, isDone);
+            try {
+                int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
+                boolean isDone = true;
+                return new MarkTaskCommand(taskIndex, isDone);
+            } catch (NumberFormatException e) {
+                throw new SeanException(Messages.WRONG_TYPE);
+            }
         } else if (commandWord.equals("delete")) {
-            int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
-            return new DeleteCommand(taskIndex);
+            try {
+                int taskIndex = Integer.parseInt(userCommand.split(" ")[1].trim()) - 1;
+                return new DeleteCommand(taskIndex);
+            } catch (NumberFormatException e) {
+                throw new SeanException(Messages.WRONG_TYPE);
+            }
         } else if (commandWord.equals("todo")) {
             String todoTask = userCommand.split("todo")[1].strip();
             return new TodoCommand(todoTask);
